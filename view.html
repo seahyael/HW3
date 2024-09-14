@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .navbar {
+            margin-bottom: 50px;
+            border-radius: 0;
+        }
+
+        .jumbotron {
+            margin-bottom: 0;
+        }
+
+        footer {
+            background-color: #d6e9c6;
+            padding: 25px;
+        }
+
+        .margin0 {
+            margin-top: -50px;
+            padding-top: 30;
+        }
+
+        .name {
+            color: black;
+        }
+
+        .blue {
+            background-color: #337ab7;
+            color: white;
+            text-decoration: underline;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        function del(){
+            
+            if (confirm('게시물을 삭제할까요?')) {
+                console.log("삭제되었습니다.");
+            } else {
+                event.preventDefault();
+                return false;
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="jumbotron">
+        <div class="container text-center">
+            <h1>도서관리 시스템</h1>
+            <p><span class="blue">View,</span> Edit, Add, Delete</p>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">View</a>
+            </div>
+            <div id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="./edit.html"> Edit</a></li>
+                </ul>
+            </div>
+            <div id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a onclick="del()"> Delete</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+
+    <footer class="blue margin0">
+        <h1 class="name">도서명: 나미야 잡화점의 기적</h1>
+        <img src="https://th.bing.com/th/id/R.873a12bffe6b335eb54e370ae6b1a2b5?rik=7faTR4WHBPPrig&riu=http%3a%2f%2fimage.yes24.com%2fGoods%2f8157957%2fXL&ehk=lrp5zMEmhv%2fbAtSxQc2FNbS5Yb3I1dNFqaFn3GjuHMU%3d&risl=&pid=ImgRaw&r=0"
+            alt="나미야 잡화점의 기적" class="img-responsive">
+        <br>
+        <p class="form-control">작가: 히가시노 게이고</p>
+        <p class="form-control">출판사: 그외</p>
+        <p class="form-control">출판년도: 2012.03</p>
+        <p class="form-control">한줄평: 오가는 편지속 전해지는 따뜻한 사람들의 이야기</p>
+    </footer>
+
+</body>
+
+</html>
