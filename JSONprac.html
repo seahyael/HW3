@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<script>
+	const my = {name : "Seah", age : "18"};
+    
+    function str() {
+    	document.getElementById("demo").innerHTML = JSON.stringify(my);
+    }
+    
+    function par() {
+    	let jstr = document.getElementById("demo").innerHTML;
+        let obj = JSON.parse(jstr);
+        document.getElementById("user").innerHTML = obj.name + "(" + obj.age + ")"
+    }
+</script>
+	
+    <button onclick = "str()">JSON.stringify()</button><br>
+    <p id = "demo">object Object</p>
+    <p id = "user"></p>
+	<button onclick = "par()">JSON.parse()</button>
+</body>
+</html>

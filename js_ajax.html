@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 관리 시스템</title>
+    <script>
+        let currentEditId = null;
+
+        window.onload = function () {
+            let btnStu = document.getElementById("btnStu");
+            let btnAdd = document.getElementById("btnAdd");
+            let btnEdit = document.getElementById("btnedit");
+            btnStu.addEventListener("click", getStudents);
+            btnAdd.addEventListener("click", postData);
+            btnEdit.addEventListener("click", updateData);
+        }
+
+        function getStudents() {
+            let contents = document.getElementById("contents");
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:3000/students");
+            xhr.setRequestHeader("content-type", "application/json");
+            xhr.send();
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    const res = JSON.parse(xhr.response);
+                    contents.innerHTML = makeList(res);
+                } else {
+                    console.log(xhr.status, xhr.statusText);
+                }
+            }
+        }
+
+        function makeList(data) {
+            let str = "<ul>";
+            for (let key in data) {
+                str += `<li>
+                            ${data[key].name} (${data[key].age})
+                            <button onclick="editStudent(${data[key].id}, '${data[key].name}', ${data[key].age})">수정</button>
+                            <button onclick="deleteStudent(${data[key].id})">삭제</button>
+                        </li>`;
+            }
+            str += "</ul>";
+            return str;
+        }
+
+        function editStudent(id, name, age) {
+            currentEditId = id;
+            document.getElementById("name").value = name;
+            document.getElementById("age").value = age;
+        }
+
+        function postData() {
+            let name = document.getElementById("name").value.trim();
+            let age = document.getElementById("age").value.trim();
+
+            if (!name || !age) {
+                alert("이름과 나이를 모두 입력해주세요.");
+                return;
+            }
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:3000/students");
+            xhr.setRequestHeader("content-type", "application/json");
+            xhr.send();
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    const students = JSON.parse(xhr.response);
+                    const maxId = Math.max(...students.map(student => student.id));
+
+                    const newStudent = { id: String( maxId + 1 ), name: name, age: age };  
+                    const postXhr = new XMLHttpRequest();
+                    postXhr.open("POST", "http://localhost:3000/students");
+                    postXhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
+                    postXhr.send(JSON.stringify(newStudent));
+                    postXhr.onload = () => {
+                        if (postXhr.status === 201) {
+                            document.getElementById("name").value = "";
+                            document.getElementById("age").value = "";
+                            getStudents();
+                        } else {
+                            console.log(postXhr.status, postXhr.statusText);
+                            alert("학생 추가 실패: " + postXhr.statusText);
+                        }
+                    };
+                } else {
+                    console.log(xhr.status, xhr.statusText);
+                }
+            };
+        }
+
+
+        function updateData() {
+            if (currentEditId === null) {
+                alert("수정할 학생을 선택해주세요.");
+                return;
+            }
+
+            const name = document.getElementById("name").value.trim();
+            const age = document.getElementById("age").value.trim();
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("PUT", "http://localhost:3000/students/" + currentEditId);
+            xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
+            const data = { name: name, age: age };
+            xhr.send(JSON.stringify(data));
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    document.getElementById("name").value = "";
+                    document.getElementById("age").value = "";
+                    currentEditId = null;
+                    getStudents();
+                } else {
+                    console.log(xhr.status, xhr.statusText);
+                }
+            }
+        }
+
+        function deleteStudent(id) {
+            const confirmation = confirm("정말로 이 학생을 삭제하시겠습니까?");
+            if (!confirmation) return;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "http://localhost:3000/students/" + id);
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    getStudents();
+                } else {
+                    console.log(xhr.status, xhr.statusText);
+                    alert("학생 삭제 실패: " + xhr.statusText);
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</head>
+
+<body>
+    <button id="btnStu">학생데이터 가져오기</button><br>
+    <input type="text" id="name" placeholder="이름">
+    <input type="number" id="age" placeholder="나이">
+    <button id="btnAdd">학생데이터 추가</button>
+    <button id="btnedit">학생데이터 수정</button>
+    <ul id="contents">
+    </ul>
+</body>
+
+</html>
